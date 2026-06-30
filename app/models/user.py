@@ -1,1 +1,61 @@
-\"\"\"User Model\"\"\"\n\nfrom datetime import datetime\nfrom sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Text, Enum\nfrom sqlalchemy.ext.declarative import declarative_base\nfrom app.constants import USER_STATUS_ACTIVE, PERMISSION_USER\n\nBase = declarative_base()\n\n\nclass User(Base):\n    \"\"\"User Database Model\"\"\"\n    __tablename__ = \"users\"\n    \n    id = Column(Integer, primary_key=True)\n    telegram_id = Column(String(255), unique=True, nullable=False, index=True)\n    username = Column(String(255), nullable=True)\n    first_name = Column(String(255), nullable=True)\n    last_name = Column(String(255), nullable=True)\n    phone_number = Column(String(20), nullable=True)\n    \n    # Account Status\n    status = Column(String(50), default=USER_STATUS_ACTIVE, index=True)\n    is_banned = Column(Boolean, default=False)\n    ban_reason = Column(Text, nullable=True)\n    ban_until = Column(DateTime, nullable=True)\n    \n    # Permission Level\n    permission_level = Column(Integer, default=PERMISSION_USER)\n    \n    # Financial\n    balance = Column(Float, default=0.0)  # Wallet balance\n    referral_balance = Column(Float, default=0.0)  # Referral earnings\n    total_spent = Column(Float, default=0.0)\n    total_referral_earned = Column(Float, default=0.0)\n    \n    # Referral System\n    referral_code = Column(String(50), unique=True, nullable=True, index=True)\n    referred_by = Column(String(255), nullable=True)  # Referrer's telegram_id\n    referral_count = Column(Integer, default=0)\n    \n    # Language Preference\n    language = Column(String(10), default=\"fa\")\n    \n    # Preferences\n    notifications_enabled = Column(Boolean, default=True)\n    two_factor_enabled = Column(Boolean, default=False)\n    two_factor_secret = Column(String(255), nullable=True)\n    \n    # Timestamps\n    created_at = Column(DateTime, default=datetime.utcnow, index=True)\n    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)\n    last_active = Column(DateTime, default=datetime.utcnow)\n    \n    # Additional Info\n    ip_address = Column(String(50), nullable=True)\n    device_info = Column(Text, nullable=True)\n    notes = Column(Text, nullable=True)\n    \n    def __repr__(self):\n        return f\"<User {self.telegram_id} - {self.username}>\"\n"
+"""User Model"""
+
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Text
+from sqlalchemy.ext.declarative import declarative_base
+from app.constants import USER_STATUS_ACTIVE, PERMISSION_USER
+
+Base = declarative_base()
+
+
+class User(Base):
+    """User Database Model"""
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True)
+    telegram_id = Column(String(255), unique=True, nullable=False, index=True)
+    username = Column(String(255), nullable=True)
+    first_name = Column(String(255), nullable=True)
+    last_name = Column(String(255), nullable=True)
+    phone_number = Column(String(20), nullable=True)
+    
+    # Account Status
+    status = Column(String(50), default=USER_STATUS_ACTIVE, index=True)
+    is_banned = Column(Boolean, default=False)
+    ban_reason = Column(Text, nullable=True)
+    ban_until = Column(DateTime, nullable=True)
+    
+    # Permission Level
+    permission_level = Column(Integer, default=PERMISSION_USER)
+    
+    # Financial
+    balance = Column(Float, default=0.0)  # Wallet balance
+    referral_balance = Column(Float, default=0.0)  # Referral earnings
+    total_spent = Column(Float, default=0.0)
+    total_referral_earned = Column(Float, default=0.0)
+    
+    # Referral System
+    referral_code = Column(String(50), unique=True, nullable=True, index=True)
+    referred_by = Column(String(255), nullable=True)  # Referrer's telegram_id
+    referral_count = Column(Integer, default=0)
+    
+    # Language Preference
+    language = Column(String(10), default="fa")
+    
+    # Preferences
+    notifications_enabled = Column(Boolean, default=True)
+    two_factor_enabled = Column(Boolean, default=False)
+    two_factor_secret = Column(String(255), nullable=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_active = Column(DateTime, default=datetime.utcnow)
+    
+    # Additional Info
+    ip_address = Column(String(50), nullable=True)
+    device_info = Column(Text, nullable=True)
+    notes = Column(Text, nullable=True)
+    
+    def __repr__(self):
+        return f"<User {self.telegram_id} - {self.username}>"
